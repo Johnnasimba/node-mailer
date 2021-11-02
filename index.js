@@ -27,7 +27,20 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
     res.render('contact');
 });
-
+app.post('/send', (req, res) => {
+    const output = `
+    <p>You have a new contact request</p>
+    <ul>
+        <li>Name: ${req.body.name}</li>
+        <li>company: ${req.body.company}</li>
+        <li>email: ${req.body.email}</li>
+        <li>Phone Number: ${req.body.phone}</li>
+    </ul>
+    <H3>Message</H3>
+    <p> ${req.body.message}</p>       
+    
+    `
+})
 
 const PORT=process.env.PORT||3000;
 

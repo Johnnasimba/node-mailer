@@ -41,31 +41,38 @@ app.post('/send', (req, res) => {
     <p> ${req.body.message}</p>       
     
     `;
-    let transporter = nodemailer.createTransport({
-        host: "outlook.office365.com",
-        port: 995,
-        secure: false, // true for 465, false for other ports
-        auth: {
-          user: testAccount.user, // generated ethereal user
-          pass: testAccount.pass, // generated ethereal password
-        },
-      });
-    
-      // send mail with defined transport object
-      let info = await transporter.sendMail({
-        from: '"Fred Foo 👻" <foo@example.com>', // sender address
-        to: "bar@example.com, baz@example.com", // list of receivers
-        subject: "Hello ✔", // Subject line
-        text: "Hello world?", // plain text body
-        html: "<b>Hello world?</b>", // html body
-      });
-    
-      console.log("Message sent: %s", info.messageId);
-      // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-    
-      // Preview only available when sending through an Ethereal account
-      console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    async function main() {
+        
+        let transporter = nodemailer.createTransport({
+            host: "smtp.office365.com", //outlook.office365.com
+            secureConnection: false, // TLS requires secureConnection to be false
+            port: 587,
+            secure: false, // true for 465, false for other ports
+            tls: {
+               ciphers:'SSLv3'
+            },
+            auth: {
+                user: 'nasimba4john@outlook.com', // generated ethereal user
+                pass: process.env.PASSWORD, // generated ethereal password
+            },
+        });
+        
+        // send mail with defined transport object
+        let info = await transporter.sendMail({
+            from: '"Nodemailer contact form" <nasimba4john@outlook.com>', // sender address
+            to: "nasimba4john@gmail.com", // list of receivers
+            subject: "TESTING SENDING EMAILS USING NODEMAILER", // Subject line
+            text: "Hello world?", // plain text body
+            html: output, // html body
+        });
+        
+        console.log("Message sent: %s", info.messageId);
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        res.render('contact', {msg: 'Message sent'})
+    }
+    main().catch(console.error);
 })
+
 
 const PORT=process.env.PORT||3000;
 

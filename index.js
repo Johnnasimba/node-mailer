@@ -1,20 +1,31 @@
 const express =  require('express');
 const bodyParser = require('body-parser');
+const path =  require('path');
 const exphbs = require('express-handlebars');
 const nodemailer = require('nodemailer');
 
 const app = express();
 
 //  View engine setup
-app.engine('handlebars', exphbs);
+app.engine(
+    'handlebars', 
+    exphbs({
+        extname: "hbs",
+        defaultLayout: false
+    })
+  );
+
 app.set('view engine', 'handlebars');
+
+// static folder
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Body parser middleware
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-    res.send("Hello from express server")
+    res.render('contact');
 });
 
 
